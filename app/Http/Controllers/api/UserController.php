@@ -25,7 +25,19 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+        $user = User::create($request->all());
+
+        return response()->json([
+            'title' => 'users data',
+            'data' => $user,
+            'message' => 'success'
+        ], 200);
     }
 
     /**
@@ -33,7 +45,13 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $user = User::find($id);
+
+        return response()->json([
+            'title' => 'users data',
+            'data' => $user,
+            'message' => 'success'
+        ], 200);
     }
 
     /**
@@ -41,7 +59,15 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $user = User::find($id);
+
+        $user->update($request->all());
+
+        return response()->json([
+            'title' => 'users data',
+            'data' => $user,
+            'message' => 'success'
+        ], 200);
     }
 
     /**
@@ -49,6 +75,14 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::find($id);
+
+        $user->delete();
+
+        return response()->json([
+            'title' => 'users data',
+            'data' => $user,
+            'message' => 'success'
+        ], 200);
     }
 }
