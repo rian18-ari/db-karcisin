@@ -1,58 +1,91 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Karcisin API 🎟️
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Karcisin adalah sistem manajemen tiket event berbasis web dan mobile yang dibangun menggunakan framework **Laravel 13**. Proyek ini berfungsi sebagai backend API untuk aplikasi pemesanan tiket, mencakup pengelolaan event, kategori, serta sistem booking.
 
-## About Laravel
+## 🚀 Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* **Autentikasi**: Sistem Login dan Register menggunakan Laravel Sanctum.
+* **Manajemen Event**: CRUD data event lengkap dengan informasi lokasi (latitude/longitude), kuota, dan status.
+* **Kategori Event**: Pengelompokan event berdasarkan kategori tertentu.
+* **Sistem Booking**: Proses pemesanan tiket dengan kode unik dan unggah bukti pembayaran.
+* **RESTful API**: Endpoint yang terstruktur untuk integrasi dengan aplikasi mobile (Flutter).
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠️ Teknologi yang Digunakan
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* **Backend**: [Laravel 13](https://laravel.com)
+* **Database**: MariaDB/MySQL (melalui migrasi Laravel)
+* **Auth**: Laravel Sanctum
+* **Package Dev**: Laravel Sail, Pint, & Pail
 
-## Learning Laravel
+## 📋 Struktur Database (Migrations)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Proyek ini memiliki beberapa tabel utama:
+- `users`: Data pengguna dan penyelenggara.
+- `categories`: Kategori event (e.g., Konser, Workshop).
+- `events`: Detail acara, lokasi, harga, dan relasi ke kategori/user.
+- `bookings`: Transaksi tiket, status pembayaran, dan riwayat check-in.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚦 Endpoint API (v1)
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+Berikut adalah beberapa endpoint yang tersedia:
 
-## Agentic Development
+| Method | Endpoint | Deskripsi |
+| :--- | :--- | :--- |
+| POST | `/api/v1/login` | Autentikasi pengguna |
+| POST | `/api/v1/register` | Pendaftaran pengguna baru |
+| GET | `/api/v1/events` | Mengambil daftar semua event |
+| GET | `/api/v1/users` | Daftar pengguna (Admin/Internal) |
+| GET | `/api/v1/users/{id}` | Detail profil pengguna |
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 💻 Cara Instalasi
 
-```bash
-composer require laravel/boost --dev
+1. **Clone repositori**:
+   ```bash
+   git clone [https://github.com/rian18-ari/db-karcisin.git](https://github.com/rian18-ari/db-karcisin.git)
+   cd db-karcisin
+2. **Install dependencies**:
+   ```bash
+   composer install
+   ```
+3. **Konfigurasi environment**:
+   Salin file `.env.example` menjadi `.env` dan sesuaikan kredensial database:
+   ```bash
+   cp .env.example .env
+   ```
+4. **Generate key**:
+   ```bash
+   php artisan key:generate
+   ```
+5. **Jalankan migrasi database**:
+   ```bash
+   php artisan migrate
+   ```
+6. **Jalankan server development**:
+   ```bash
+   php artisan serve
+   ```
+   Server akan berjalan pada `http://localhost:8000`.
 
-php artisan boost:install
+## 🧪 Pengujian API
+
+Anda dapat menggunakan alat seperti [Postman](https://www.postman.com/) atau [Insomnia](https://insomnia.rest/) untuk menguji endpoint API.
+
+### Contoh Request Login
+
+**URL**: `http://localhost:8000/api/v1/login`
+**Method**: `POST`
+**Body** (JSON):
+```json
+{
+    "email": "[EMAIL_ADDRESS]",
+    "password": "password123"
+}
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## 🤝 Kontribusi
 
-## Contributing
+Kontribusi sangat diterima! Silakan fork repositori, buat branch fitur (`git checkout -b feature/AmazingFeature`), commit perubahan (`git commit -m 'Add some AmazingFeature'`), dan push ke branch (`git push origin feature/AmazingFeature`).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 📄 Lisensi
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Proyek ini dilisensikan di bawah Lisensi MIT.
