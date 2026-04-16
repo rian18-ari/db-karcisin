@@ -75,12 +75,19 @@ class EventController extends Controller
             // 5. Commit kalau semua sukses
             DB::commit();
 
-            return response()->json(['message' => 'Event dan Tiket berhasil dibuat!', 'data' => $event->load('tickets')], 201);
+            return response()->json([
+                'title' => 'event list',
+                'message' => 'Event dan Tiket berhasil dibuat!', 
+                'data' => $event->load('tickets')
+            ], 201);
 
         } catch (\Exception $e) {
             // 6. Rollback kalau ada yang error
             DB::rollBack();
-            return response()->json(['message' => 'Gagal simpan data', 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'Gagal simpan data', 
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
