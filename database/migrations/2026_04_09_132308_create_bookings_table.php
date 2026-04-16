@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->string('proof_of_payment');
             $table->timestamp('check_in_at')->nullable();
-            $table->foreignId('event_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('ticket_package_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

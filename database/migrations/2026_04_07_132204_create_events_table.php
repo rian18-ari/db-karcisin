@@ -16,13 +16,11 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->text('description');
-            $table->integer('quota')->nullable();
             $table->decimal('latitude', 10, 8);
             $table->decimal('longitude', 11, 8);
             $table->string('location');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
-            $table->decimal('price', 10, 2);
             $table->enum('status', ['draft', 'published', 'closed', 'cancelled'])->default('draft');
             $table->string('image');
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();

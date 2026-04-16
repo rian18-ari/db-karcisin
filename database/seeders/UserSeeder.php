@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Siti Rahayu',
                 'email' => 'siti@example.com',
-                'role' => 'atender',
+                'role' => 'user',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
                 'remember_token' => null,
@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Andi Pratama',
                 'email' => 'andi@example.com',
-                'role' => 'atender',
+                'role' => 'user',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
                 'remember_token' => null,

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Booking;
 use App\Models\bookings;
 use Illuminate\Database\Seeder;
 
@@ -13,8 +12,9 @@ class BookingSeeder extends Seeder
      */
     public function run(): void
     {
-        // Seeder ini mengasumsikan UserSeeder dan EventSeeder sudah dijalankan.
-        // User atender: Siti=2, Andi=3. Event: Festival Musik=1, Futsal=2, Tech Summit=3.
+        // Seeder ini mengasumsikan UserSeeder dan EventSeeder (beserta TicketPackage) sudah dijalankan.
+        // User: Siti=2, Andi=3.
+        // Ticket packages: Regular Musik=1, VIP Musik=2, Regular Futsal=3, Regular Tech=4, Early Bird Tech=5.
 
         bookings::insert([
             [
@@ -23,7 +23,7 @@ class BookingSeeder extends Seeder
                 'price' => 150000.00,
                 'proof_of_payment' => 'payments/bukti-transfer-1.jpg',
                 'check_in_at' => null,
-                'event_id' => 1,
+                'ticket_package_id' => 1,
                 'user_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -34,7 +34,7 @@ class BookingSeeder extends Seeder
                 'price' => 50000.00,
                 'proof_of_payment' => 'payments/bukti-transfer-2.jpg',
                 'check_in_at' => null,
-                'event_id' => 2,
+                'ticket_package_id' => 3,
                 'user_id' => 3,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -45,7 +45,7 @@ class BookingSeeder extends Seeder
                 'price' => 250000.00,
                 'proof_of_payment' => 'payments/bukti-transfer-3.jpg',
                 'check_in_at' => now(),
-                'event_id' => 3,
+                'ticket_package_id' => 4,
                 'user_id' => 2,
                 'created_at' => now(),
                 'updated_at' => now(),
