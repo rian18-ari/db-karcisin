@@ -66,8 +66,9 @@ class BookingController extends Controller
         // 5. Simpan booking
         $booking = bookings::create([
             'user_id' => auth()->id(), // Ambil ID user yang sedang login via Sanctum
+            'ticket_code' => $this->generateUniqueTicketCode(),
             'ticket_package_id' => $validated['ticket_package_id'],
-            'total_price' => $totalPrice,
+            'price' => $totalPrice,
             'status' => 'pending', // Status awal selalu pending
         ]);
 
@@ -102,7 +103,10 @@ class BookingController extends Controller
     {
         $booking = bookings::find($id);
 
-        $booking->update($request->all());
+        $booking->update([
+            'check_in_at' => now(),
+            'status' => 'used'
+        ]);
 
         return response()->json([
             'title' => "booking list",

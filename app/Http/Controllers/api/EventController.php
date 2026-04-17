@@ -51,7 +51,7 @@ class EventController extends Controller
 
         try {
             // 3. Simpan Event
-            $event = Event::create([
+            $event = event::create([
                 'title' => $request->title,
                 'slug' => Str::slug($request->title) . '-' . Str::random(5),
                 'description' => $request->description,
@@ -63,7 +63,7 @@ class EventController extends Controller
                 'image' => $request->image,
                 'status' => $request->status ?? 'draft',
                 'category_id' => $request->category_id,
-                'user_id' => auth()->id() ?? $request->user_id, // Gunakan auth id kalau sudah ada login
+                'user_id' => auth()->id(), // Gunakan auth id kalau sudah ada login
             ]);
 
             // 4. Simpan Tiket-tiketnya menggunakan relasi
