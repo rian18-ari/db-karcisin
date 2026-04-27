@@ -20,6 +20,15 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function me(Request $request)
+    {
+        return response()->json([
+            'title' => 'users data',
+            'data' => $request->user(),
+            'message' => 'success'
+        ], 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

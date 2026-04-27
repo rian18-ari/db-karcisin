@@ -1,91 +1,120 @@
-# Karcisin API 🎟️
+# Karcis.in 🎟️
 
-Karcisin adalah sistem manajemen tiket event berbasis web dan mobile yang dibangun menggunakan framework **Laravel 13**. Proyek ini berfungsi sebagai backend API untuk aplikasi pemesanan tiket, mencakup pengelolaan event, kategori, serta sistem booking.
+**Karcis.in** adalah platform manajemen tiket event modern yang menyatukan kemudahan integrasi API untuk aplikasi mobile (Flutter) dengan dashboard web yang elegan bagi penyelenggara acara (Owner). Platform ini dibangun untuk memberikan pengalaman UX terbaik mulai dari pembuatan event hingga validasi peserta di lokasi.
 
-## 🚀 Fitur Utama
+---
 
-* **Autentikasi**: Sistem Login dan Register menggunakan Laravel Sanctum.
-* **Manajemen Event**: CRUD data event lengkap dengan informasi lokasi (latitude/longitude), kuota, dan status.
-* **Kategori Event**: Pengelompokan event berdasarkan kategori tertentu.
-* **Sistem Booking**: Proses pemesanan tiket dengan kode unik dan unggah bukti pembayaran.
-* **RESTful API**: Endpoint yang terstruktur untuk integrasi dengan aplikasi mobile (Flutter).
+## 🌟 Fitur Unggulan
 
-## 🛠️ Teknologi yang Digunakan
+### 1. **Owner Dashboard Premium**
+Dashboard khusus penyelenggara dengan visualisasi data yang bersih dan modern menggunakan **Tailwind CSS**. 
+- Ringkasan statistik (Total Event, Peserta, Revenue).
+- Manajemen peserta real-time.
 
-* **Backend**: [Laravel 13](https://laravel.com)
-* **Database**: MariaDB/MySQL (melalui migrasi Laravel)
-* **Auth**: Laravel Sanctum
-* **Package Dev**: Laravel Sail, Pint, & Pail
+### 2. **Interactive Map Tagging**
+Integrasi **Leaflet.js** dan **OpenStreetMap** pada halaman pembuatan event.
+- Klik pada peta untuk mengambil koordinat Latitude dan Longitude secara otomatis.
+- Mempermudah peserta menemukan lokasi acara dengan presisi tinggi.
 
-## 📋 Struktur Database (Migrations)
+### 3. **Smart Authentication System**
+Implementasi sistem keamanan berlapis:
+- **Web Auth**: Menggunakan Laravel Session untuk manajemen akses Dashboard.
+- **API Auth**: Menggunakan **Laravel Sanctum** untuk komunikasi aman dengan aplikasi mobile.
+- Role-based Access Control (Owner & User).
 
-Proyek ini memiliki beberapa tabel utama:
-- `users`: Data pengguna dan penyelenggara.
-- `categories`: Kategori event (e.g., Konser, Workshop).
-- `events`: Detail acara, lokasi, harga, dan relasi ke kategori/user.
-- `bookings`: Transaksi tiket, status pembayaran, dan riwayat check-in.
+### 4. **Fitur Validasi (Check-in)**
+Sistem check-in yang efisien untuk mempercepat antrean di lokasi acara.
+- Update status tiket menjadi `used`.
+- Pencatatan otomatis waktu kedatangan (`check_in_at`).
 
-## 🚦 Endpoint API (v1)
+### 5. **Premium UI/UX Design**
+- **Aesthetics**: Menggunakan font **Plus Jakarta Sans**, efek *glassmorphism*, dan transisi halus.
+- **Responsive**: Optimal diakses dari perangkat mobile maupun desktop.
 
-Berikut adalah beberapa endpoint yang tersedia:
+---
 
-| Method | Endpoint | Deskripsi |
-| :--- | :--- | :--- |
-| POST | `/api/v1/login` | Autentikasi pengguna |
-| POST | `/api/v1/register` | Pendaftaran pengguna baru |
-| GET | `/api/v1/events` | Mengambil daftar semua event |
-| GET | `/api/v1/users` | Daftar pengguna (Admin/Internal) |
-| GET | `/api/v1/users/{id}` | Detail profil pengguna |
+## 🛠️ Teknologi & Tools
+
+| Komponen | Teknologi |
+| :--- | :--- |
+| **Framework Utama** | [Laravel 13](https://laravel.com) |
+| **Styling** | [Tailwind CSS](https://tailwindcss.com) |
+| **Maps & Geolocation** | [Leaflet.js](https://leafletjs.com) & OpenStreetMap |
+| **Autentikasi** | Laravel Sanctum & Web Guard |
+| **Frontend Logic** | Blade Templates & [Alpine.js](https://alpinejs.dev) |
+| **Icons & Fonts** | HeroIcons & Google Fonts (Plus Jakarta Sans) |
+| **Image Processing** | Local Storage / Public Uploads |
+
+---
+
+## 📋 Prasyarat Sistem
+
+- PHP >= 8.2
+- Composer
+- Node.js & NPM (untuk aset frontend)
+- MySQL / MariaDB
+
+---
 
 ## 💻 Cara Instalasi
 
-1. **Clone repositori**:
+1. **Clone Repositori**:
    ```bash
-   git clone [https://github.com/rian18-ari/db-karcisin.git](https://github.com/rian18-ari/db-karcisin.git)
+   git clone https://github.com/rian18-ari/db-karcisin.git
    cd db-karcisin
-2. **Install dependencies**:
+   ```
+
+2. **Install Dependencies**:
    ```bash
    composer install
+   npm install && npm run dev
    ```
-3. **Konfigurasi environment**:
-   Salin file `.env.example` menjadi `.env` dan sesuaikan kredensial database:
+
+3. **Konfigurasi Environment**:
    ```bash
    cp .env.example .env
-   ```
-4. **Generate key**:
-   ```bash
    php artisan key:generate
    ```
-5. **Jalankan migrasi database**:
+
+4. **Database & Storage**:
    ```bash
-   php artisan migrate
+   php artisan migrate --seed
+   php artisan storage:link
+   mkdir -p public/events # Pastikan folder upload tersedia
    ```
-6. **Jalankan server development**:
+
+5. **Jalankan Aplikasi**:
    ```bash
    php artisan serve
    ```
-   Server akan berjalan pada `http://localhost:8000`.
 
-## 🧪 Pengujian API
+---
 
-Anda dapat menggunakan alat seperti [Postman](https://www.postman.com/) atau [Insomnia](https://insomnia.rest/) untuk menguji endpoint API.
+## 🚦 Akses Aplikasi
 
-### Contoh Request Login
+### Web Dashboard
+- **Landing Page**: `/`
+- **Login Penyelenggara**: `/login`
+- **Owner Dashboard**: `/owner/dashboard`
+- **Create Event**: `/owner/events/create`
+- **List Peserta**: `/owner/participants`
 
-**URL**: `http://localhost:8000/api/v1/login`
-**Method**: `POST`
-**Body** (JSON):
-```json
-{
-    "email": "[EMAIL_ADDRESS]",
-    "password": "password123"
-}
-```
+### API Endpoint (v1)
+- `POST /api/login` - Autentikasi User
+- `GET /api/events` - Daftar Event
+- `POST /api/bookings` - Pemesanan Tiket
+
+---
 
 ## 🤝 Kontribusi
 
-Kontribusi sangat diterima! Silakan fork repositori, buat branch fitur (`git checkout -b feature/AmazingFeature`), commit perubahan (`git commit -m 'Add some AmazingFeature'`), dan push ke branch (`git push origin feature/AmazingFeature`).
+Kami sangat terbuka untuk kontribusi! Silakan buka *issue* atau kirimkan *pull request* untuk perbaikan dan fitur baru.
+
+---
 
 ## 📄 Lisensi
 
-Proyek ini dilisensikan di bawah Lisensi MIT.
+Proyek ini dilisensikan di bawah **Lisensi MIT**. 
+
+---
+*Dibuat dengan ❤️ oleh tim Karcis.in - 2026*
