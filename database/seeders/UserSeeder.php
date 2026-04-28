@@ -36,6 +36,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'Andi Pratama',
+        // Cek apakah sudah login
                 'email' => 'andi@example.com',
                 'role' => 'user',
                 'email_verified_at' => now(),

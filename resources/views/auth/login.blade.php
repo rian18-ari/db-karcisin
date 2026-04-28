@@ -11,74 +11,105 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FDFBF7;
+        }
+
+        .text-crimson {
+            color: #BD2636;
+        }
+
+        .bg-crimson {
+            background-color: #BD2636;
+        }
+
+        .input-minimal {
+            border-bottom: 2px solid #F0EFEA;
+            transition: all 0.3s;
+        }
+
+        .input-minimal:focus {
+            border-bottom-color: #BD2636;
+            outline: none;
+        }
+
+        .image-overlay {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.6));
         }
     </style>
 </head>
 
-<body class="bg-indigo-600 flex items-center justify-center min-h-screen p-6">
-    <div class="bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col md:flex-row max-w-4xl w-full">
-        <div class="hidden md:block w-1/2 bg-slate-900 p-12 text-white flex flex-col justify-between">
-            <div>
-                <h1
-                    class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">
-                    Karcis.in</h1>
-                <p class="mt-8 text-lg font-medium">Join the elite community of event organizers.</p>
-                <div class="mt-12 space-y-6">
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold">
-                            1</div>
-                        <p class="text-slate-400 text-sm">Professional Dashboard</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold">
-                            2</div>
-                        <p class="text-slate-400 text-sm">Real-time Check-ins</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div
-                            class="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400 font-bold">
-                            3</div>
-                        <p class="text-slate-400 text-sm">Automated Ticketing</p>
-                    </div>
-                </div>
+<body class="antialiased min-h-screen flex items-center justify-center p-6 bg-[#FDFBF7]">
+    <div
+        class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 bg-white rounded-[40px] overflow-hidden shadow-2xl shadow-slate-200/50">
+        <!-- Left Side: Architectural Visual -->
+        <div class="hidden lg:block relative overflow-hidden h-[700px]">
+            <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop"
+                class="w-full h-full object-cover">
+            <div class="absolute inset-0 image-overlay p-16 flex flex-col justify-end text-white">
+                <h1 class="text-4xl font-black tracking-tighter leading-none mb-4">ELEVATE YOUR <br> EVENT EXPERIENCE.
+                </h1>
+                <p class="text-sm font-medium uppercase tracking-[0.2em] text-white/70">Join the vanguard of event
+                    organizers.</p>
             </div>
-            <p class="text-xs text-slate-500 italic">"Making your events unforgettable since 2026"</p>
+            <!-- Logo overlay -->
+            <div
+                class="absolute top-12 left-12 px-6 py-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full">
+                <span class="text-[10px] font-black uppercase tracking-[0.5em] text-white">KARCIS.IN</span>
+            </div>
         </div>
 
-        <div class="w-full md:w-1/2 p-12">
-            <h2 class="text-2xl font-bold text-slate-900">Welcome Back</h2>
-            <p class="text-slate-500 mt-1 text-sm">Please enter your details to sign in</p>
+        <!-- Right Side: Login Form -->
+        <div class="p-12 lg:p-24 flex flex-col justify-center">
+            <div class="mb-12">
+                <h2 class="text-xs font-black uppercase tracking-[0.5em] text-slate-400 mb-4">Welcome Back</h2>
+                <h3 class="text-4xl font-black text-slate-800 tracking-tight leading-none italic font-serif font-light">
+                    <span class="not-italic font-black text-slate-800">Sign in to</span> <br> <span
+                        class="text-crimson">dashboard</span>.</h3>
+            </div>
 
-            <form action="{{ route('login') }}" method="POST" class="mt-8 space-y-5">
-                @csrf
-                <div>
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Email Address</label>
-                    <input type="email" name="email" required value="{{ old('email') }}"
-                        class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none transition"
-                        placeholder="name@company.com">
-                    @error('email') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+            @if(session('error'))
+                <div
+                    class="mb-8 p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-[10px] font-black uppercase tracking-widest">
+                    {{ session('error') }}
                 </div>
-                <div>
-                    <div class="flex justify-between items-center mb-2">
-                        <label class="text-sm font-semibold text-slate-700">Password</label>
-                        <a href="#" class="text-xs font-bold text-indigo-600">Forgot Password?</a>
+            @endif
+
+            <form action="{{ route('login') }}" method="POST" class="space-y-10">
+                @csrf
+                <div class="space-y-4">
+                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Email Address</label>
+                    <input type="email" name="email" required autofocus
+                        class="w-full text-lg font-bold text-slate-800 placeholder:text-slate-200 input-minimal bg-transparent pb-4"
+                        placeholder="email@example.com">
+                </div>
+
+                <div class="space-y-4">
+                    <div
+                        class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-slate-400">
+                        <label>Password</label>
+                        <a href="#" class="hover:text-crimson transition">Forgot?</a>
                     </div>
                     <input type="password" name="password" required
-                        class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:ring-2 focus:ring-indigo-600 outline-none transition"
+                        class="w-full text-lg font-bold text-slate-800 placeholder:text-slate-200 input-minimal bg-transparent pb-4"
                         placeholder="••••••••">
                 </div>
 
-                <button type="submit"
-                    class="w-full py-4 bg-indigo-600 text-white font-bold rounded-2xl hover:bg-indigo-700 transition shadow-lg shadow-indigo-200">Sign
-                    In</button>
-            </form>
+                <div class="pt-4 space-y-8">
+                    <button type="submit"
+                        class="w-full py-6 bg-crimson text-white text-[12px] font-black uppercase tracking-[0.4em] rounded-full shadow-2xl shadow-red-200/50 hover:bg-[#a01f2d] transition duration-300">
+                        ACCESS DASHBOARD
+                    </button>
 
-            <p class="mt-8 text-center text-sm text-slate-500">
-                Don't have an account?
-                <a href="{{ route('register') }}" class="text-indigo-600 font-bold">Create one today</a>
-            </p>
+                    <div class="text-center">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                            New here?
+                            <a href="{{ route('register') }}"
+                                class="text-crimson ml-2 border-b-2 border-red-100 hover:border-crimson transition pb-0.5">Create
+                                Account</a>
+                        </p>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </body>

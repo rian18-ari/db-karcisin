@@ -18,4 +18,9 @@ class ticket_package extends Model
     {
         return $this->belongsTo(event::class);
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(bookings::class);
+    }
 }
