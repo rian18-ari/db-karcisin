@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
                 'name' => 'Budi Santoso',
                 'email' => 'budi@example.com',
                 'role' => 'owner',
+                'phone' => '08123456689',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
                 'remember_token' => null,
@@ -28,6 +29,7 @@ class UserSeeder extends Seeder
                 'name' => 'Siti Rahayu',
                 'email' => 'siti@example.com',
                 'role' => 'user',
+                'phone' => '08123456787',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
                 'remember_token' => null,
@@ -36,9 +38,9 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => 'Andi Pratama',
-        // Cek apakah sudah login
                 'email' => 'andi@example.com',
                 'role' => 'user',
+                'phone' => '08123456763',
                 'email_verified_at' => now(),
                 'password' => Hash::make('password'),
                 'remember_token' => null,

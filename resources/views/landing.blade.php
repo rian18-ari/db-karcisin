@@ -311,7 +311,8 @@
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
             <div>
                 <a href="/" class="text-sm font-black uppercase tracking-[0.5em] text-white">Karcis.in</a>
-                <p class="mt-4 text-[10px] font-bold uppercase tracking-widest">&copy; 2026 Karcis.in - Experience
+                <p class="mt-4 text-[10px] font-bold uppercase tracking-widest">&copy; {{ now()->year }} Karcis.in -
+                    Experience
                     Redefined.</p>
             </div>
             <div class="flex gap-12 text-[10px] font-black uppercase tracking-[0.3em]">
