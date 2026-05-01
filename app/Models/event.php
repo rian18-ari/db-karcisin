@@ -25,4 +25,14 @@ class event extends Model
     {
         return $this->hasMany(ticket_package::class);
     }
+
+    public function category()
+    {
+        return $this->belongsTo(categories::class, 'category_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

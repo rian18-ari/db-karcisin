@@ -132,7 +132,8 @@ new class extends Component {
                                     <p class="text-sm font-bold text-slate-800 leading-none mb-1">{{ $booking->user->name }}
                                     </p>
                                     <p class="text-[10px] font-bold text-slate-300 lowercase tracking-widest">
-                                        {{ $booking->user->email }}</p>
+                                        {{ $booking->user->email }}
+                                    </p>
                                 </div>
                             </div>
                         </td>

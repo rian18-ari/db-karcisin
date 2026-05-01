@@ -12,7 +12,7 @@ new class extends Component {
 
     public function mount($id)
     {
-        $this->event = event::with('tickets.bookings')->find($id);
+        $this->event = event::with('tickets.bookings', 'category')->find($id);
 
         abort_unless($this->event, 404);
 
@@ -65,6 +65,12 @@ new class extends Component {
                         <span class="w-1.5 h-1.5 rounded-full {{ $statusStyle['dot'] }}"></span>
                         {{ $statusStyle['label'] }}
                     </span>
+                    @if($event->category)
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 text-white text-[9px] font-black uppercase tracking-widest rounded-full"
+                            style="background-color: {{ $event->category->color }}">
+                            {{ $event->category->icon }} {{ $event->category->name }}
+                        </span>
+                    @endif
                 </div>
                 <h1 class="text-4xl font-black text-slate-800 tracking-tighter uppercase leading-none">
                     {{ $event->title }}</h1>

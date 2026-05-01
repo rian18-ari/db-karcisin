@@ -10,7 +10,7 @@ new class extends Component {
     public function with(): array
     {
         return [
-            'events' => event::where('user_id', Auth::id())->latest()->get(),
+            'events' => event::with('category')->where('user_id', Auth::id())->latest()->get(),
         ];
     }
 };
@@ -111,6 +111,12 @@ new class extends Component {
                                         <h4 class="text-sm font-bold text-slate-800">{{ $event->title }}</h4>
                                         <p class="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-tight">
                                             {{ $event->start_date }} - {{ $event->end_date }} • {{ $event->location }}</p>
+                                        @if($event->category)
+                                            <span class="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full text-white text-[8px] font-black uppercase tracking-widest"
+                                                style="background-color: {{ $event->category->color }}">
+                                                {{ $event->category->icon }} {{ $event->category->name }}
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
                             </td>
@@ -138,20 +144,6 @@ new class extends Component {
                                                 d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                         </svg>
                                     </a>
-                                    <button class="p-2 text-slate-400 hover:text-slate-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                        </svg>
-                                    </button>
-                                    <button class="p-2 text-slate-400 hover:text-slate-600">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                                        </svg>
-                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -160,52 +152,4 @@ new class extends Component {
             </table>
         </div>
     </section>
-
-    <!-- Section: Activity & Update -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <!-- Recent Activity -->
-        <section>
-            <h2 class="text-xs font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Recent Activity</h2>
-            <div class="space-y-8 pl-4">
-                <div class="flex gap-6 relative">
-                    <div class="absolute left-[-17px] top-2 w-2.5 h-2.5 rounded-full bg-[#BD2636]"></div>
-                    <div class="absolute left-[-13px] top-5 w-px h-full bg-slate-100"></div>
-                    <div>
-                        <h4 class="text-sm font-bold text-slate-800 uppercase tracking-tight">New Participant
-                            Registration</h4>
-                        <p class="text-xs text-slate-500 mt-1">James Wilson registered for Summer Music Festival</p>
-                        <p class="text-[10px] font-bold text-slate-300 uppercase mt-2">2 minutes ago</p>
-                    </div>
-                </div>
-                <div class="flex gap-6 relative">
-                    <div class="absolute left-[-17px] top-2 w-2.5 h-2.5 rounded-full bg-amber-400"></div>
-                    <div class="absolute left-[-13px] top-5 w-px h-full bg-slate-100"></div>
-                    <div>
-                        <h4 class="text-sm font-bold text-slate-800 uppercase tracking-tight text-[#8B7E66]/80">Payout
-                            Successful</h4>
-                        <p class="text-xs text-slate-500 mt-1">Monthly revenue of $12,400 has been transferred to your
-                            bank</p>
-                        <p class="text-[10px] font-bold text-slate-300 uppercase mt-2">1 hour ago</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Platform Update -->
-        <section>
-            <div class="bg-[#FAEBEB] p-10 rounded-[40px] border border-red-100/50">
-                <h4 class="text-sm font-black uppercase tracking-[0.2em] text-[#BD2636] mb-4">Platform Update</h4>
-                <p class="text-sm text-[#BD2636]/70 leading-relaxed font-medium">
-                    We've launched the new KarcisPay integration. You can now process participant transactions directly
-                    with 0% platform fee.
-                </p>
-                <div class="mt-10">
-                    <a href="#"
-                        class="inline-block px-8 py-4 btn-primary text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl shadow-lg shadow-red-100">
-                        LEARN MORE
-                    </a>
-                </div>
-            </div>
-        </section>
-    </div>
 </div>

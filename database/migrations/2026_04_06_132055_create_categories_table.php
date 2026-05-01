@@ -14,7 +14,10 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('slug');
+            $table->string('slug')->unique();
+            $table->string('icon')->default('🎫'); // emoji icon
+            $table->string('color', 7)->default('#BD2636'); // hex color
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }
