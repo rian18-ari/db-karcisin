@@ -14,6 +14,8 @@ class bookings extends Model
         'proof_of_payment',
         'status',
         'check_in_at',
+        'snap_token',
+        'payment_status',
     ];
 
     public function ticketPackage()

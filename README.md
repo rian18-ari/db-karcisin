@@ -22,6 +22,11 @@ Implementasi sistem keamanan berlapis:
 - **API Auth**: Menggunakan **Laravel Sanctum** untuk komunikasi aman dengan aplikasi mobile.
 - Role-based Access Control (Owner & User).
 
+### 4. **Payment Gateway Integration (Midtrans)**
+Terintegrasi secara penuh dengan **Midtrans** untuk pembayaran tiket otomatis.
+- Generate Snap Token langsung saat booking tiket.
+- Webhook otomatis untuk verifikasi status pembayaran (success, cancel, expire) ke tabel database tanpa intervensi manual.
+
 ### 4. **Fitur Validasi (Check-in)**
 Sistem check-in yang efisien untuk mempercepat antrean di lokasi acara.
 - Update status tiket menjadi `used`.
@@ -75,6 +80,14 @@ Sistem check-in yang efisien untuk mempercepat antrean di lokasi acara.
    cp .env.example .env
    php artisan key:generate
    ```
+   **Tambahkan Kredensial Midtrans di `.env`:**
+   ```env
+   MIDTRANS_SERVER_KEY="SB-Mid-server-xxxx"
+   MIDTRANS_CLIENT_KEY="SB-Mid-client-xxxx"
+   MIDTRANS_IS_PRODUCTION=false
+   MIDTRANS_IS_SANITIZED=true
+   MIDTRANS_IS_3DS=true
+   ```
 
 4. **Database & Storage**:
    ```bash
@@ -102,7 +115,22 @@ Sistem check-in yang efisien untuk mempercepat antrean di lokasi acara.
 ### API Endpoint (v1)
 - `POST /api/login` - Autentikasi User
 - `GET /api/events` - Daftar Event
-- `POST /api/bookings` - Pemesanan Tiket
+- `POST /api/bookings` - Pemesanan Tiket (Return `snap_token`)
+- `POST /api/bookings/webhook` - Webhook Midtrans untuk update status pembayaran
+
+---
+
+## 💳 Cara Penggunaan Payment Gateway (Midtrans)
+
+1. **Membuat Booking (Client/Mobile)**:
+   - Kirimkan *request* `POST /api/bookings` dengan *body* berisi `ticket_package_id` dan `quantity`.
+   - API akan memvalidasi kuota dan mengembalikan data booking beserta `snap_token`.
+   - Gunakan `snap_token` tersebut pada SDK Midtrans di sisi aplikasi client (contoh: Flutter) untuk menampilkan antarmuka pembayaran.
+2. **Proses Webhook (Otomatis)**:
+   - Pastikan URL *callback* di dashboard Midtrans diatur mengarah ke URL webhook aplikasi ini:
+     `https://<domain-anda>/api/v1/bookings/webhook`
+   - Saat user menyelesaikan pembayaran (atau batal/kadaluarsa), Midtrans akan mengirim HTTP POST ke *endpoint* webhook tersebut.
+   - Sistem akan otomatis memverifikasi `signature_key` dan memperbarui `payment_status` pada tabel `bookings` menjadi `success`, `cancel`, atau `expire`.
 
 ---
 

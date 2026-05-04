@@ -18,6 +18,9 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
 
+    // midtrans webhook
+    Route::post('/bookings/webhook', [BookingController::class, 'webhook']);
+
     Route::middleware('auth:sanctum')->group(function () {
 
         // auth route
