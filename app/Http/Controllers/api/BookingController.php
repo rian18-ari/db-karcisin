@@ -21,11 +21,11 @@ class BookingController extends Controller
     public function __construct()
     {
         // Menggunakan static property sesuai library Midtrans PHP
-        Config::$serverKey = config('services.midtrans.server_key');
-        Config::$clientKey = config('services.midtrans.client_key');
-        Config::$isProduction = config('services.midtrans.is_production');
-        Config::$isSanitized = config('services.midtrans.is_sanitized');
-        Config::$is3ds = config('services.midtrans.is_3ds');
+        Config::$serverKey = Config('services.midtrans.server_key');
+        Config::$clientKey = Config('services.midtrans.client_key');
+        Config::$isProduction = Config('services.midtrans.is_production');
+        Config::$isSanitized = Config('services.midtrans.is_sanitized');
+        Config::$is3ds = Config('services.midtrans.is_3ds');
     }
 
     public function generateUniqueTicketCode()
