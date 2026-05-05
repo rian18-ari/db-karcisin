@@ -43,7 +43,7 @@ class BookingController extends Controller
     {
         $user_id = Auth::user()->id;
         $booking = bookings::where('user_id', $user_id)
-            ->with('event')
+            ->with('ticket_package.event')
             ->get();
 
         return response()->json([
@@ -85,8 +85,7 @@ class BookingController extends Controller
                 'ticket_code' => $this->generateUniqueTicketCode(),
                 'ticket_package_id' => $validated['ticket_package_id'],
                 'price' => $totalPrice,
-                'status' => 'pending', // Status awal selalu pending
-                'payment_status' => 'pending',
+                'status' => 'pending',
             ]);
 
             // 6. Generate Snap Token Midtrans
@@ -111,8 +110,10 @@ class BookingController extends Controller
             ]);
 
             // 7. Kurangi kuota tiket (Logic dasar)
-            $package->decrement('quota', $validated['quantity']);
-
+            if ($booking->status === 'paid') {
+                $package->decrement('quota', $validated['quantity']);
+            }
+            
             DB::commit();
 
             return response()->json([
