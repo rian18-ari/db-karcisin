@@ -58,7 +58,6 @@ class BookingController extends Controller
      */
     public function store(Request $request)
     {
-        $this->__construct();
 
         DB::beginTransaction();
         try {
