@@ -43,12 +43,13 @@ class BookingController extends Controller
     {
         $user_id = Auth::user()->id;
         $booking = bookings::where('user_id', $user_id)
-            ->with('ticket_package.event')
-            ->get();
+            ->with('ticketPackage.event')
+            ->latest()
+            ->first();
 
         return response()->json([
             'title' => "booking list",
-            'data' => $booking->isEmpty() ? "data masih kosong" : $booking,
+            'data' => $booking,
             'message' => "success"
         ], 200);
     }
@@ -73,7 +74,11 @@ class BookingController extends Controller
 
             // 3. (Opsional tapi Penting) Cek apakah kuota masih tersedia
             if ($package->quota < $validated['quantity']) {
-                return response()->json(['message' => 'Kuota tiket tidak mencukupi'], 400);
+                return response()->json([
+                    'title' => 'Failed',
+                    'message' => 'Kuota tiket tidak mencukupi',
+                    'error' => 'Kuota tiket tidak mencukupi'
+                ], 400);
             }
 
             // 4. Hitung total harga
@@ -86,11 +91,12 @@ class BookingController extends Controller
                 'ticket_package_id' => $validated['ticket_package_id'],
                 'price' => $totalPrice,
                 'status' => 'pending',
+                'quantity' => $request->quantity,
             ]);
 
             // 6. Generate Snap Token Midtrans
             $orderId = 'KRC-' . $booking->id . '-' . time();
-            
+
             $params = [
                 'transaction_details' => [
                     'order_id' => $orderId,
@@ -113,12 +119,13 @@ class BookingController extends Controller
             if ($booking->status === 'paid') {
                 $package->decrement('quota', $validated['quantity']);
             }
-            
+
             DB::commit();
 
             return response()->json([
                 'title' => 'Success',
                 'message' => 'Booking berhasil dibuat',
+                'order_id' => $orderId,
                 'snap_token' => $snapToken,
                 'data' => $booking
             ], 201);
@@ -187,38 +194,42 @@ class BookingController extends Controller
     public function webhook(Request $request)
     {
         $serverKey = config('services.midtrans.server_key');
-        
+
         $orderId = $request->order_id;
         $statusCode = $request->status_code;
         $grossAmount = $request->gross_amount;
         $signatureKey = $request->signature_key;
         $transactionStatus = $request->transaction_status;
-        
+
         // Verifikasi signature key
         $hashed = hash("sha512", $orderId . $statusCode . $grossAmount . $serverKey);
-        
-        if ($hashed == $signatureKey) {
+
+        if ($hashed && $signatureKey == $hashed) {
             // order_id format: KRC-{id}-{timestamp}
             $orderIdParts = explode('-', $orderId);
             $bookingId = $orderIdParts[1] ?? null;
-            
+
             if ($bookingId) {
                 $booking = bookings::find($bookingId);
-                
+                $package = ticket_package::find($booking->ticket_package_id);
+
                 if ($booking) {
                     if ($transactionStatus == 'capture' || $transactionStatus == 'settlement') {
-                        $booking->update(['payment_status' => 'success']);
+                        $booking->update(['status' => 'paid']);
+                        $package->decrement('quota', $booking->quantity);
                     } elseif ($transactionStatus == 'cancel' || $transactionStatus == 'deny') {
-                        $booking->update(['payment_status' => 'cancel']);
-                    } elseif ($transactionStatus == 'expire') {
-                        $booking->update(['payment_status' => 'expire']);
+                        $booking->update(['status' => 'cancelled']);
                     } elseif ($transactionStatus == 'pending') {
-                        $booking->update(['payment_status' => 'pending']);
+                        $booking->update(['status' => 'pending']);
                     }
                 }
             }
         }
-        
-        return response()->json(['message' => 'Webhook received']);
+
+        return response()->json([
+            'title' => 'Success',
+            'message' => 'Webhook received',
+            'data' => $booking
+        ], 200);
     }
 }

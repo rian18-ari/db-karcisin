@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+    
 return new class extends Migration
 {
     /**
@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
+            $table->string('order_id')->nullable();
             $table->string('snap_token')->nullable();
             $table->string('ticket_code')->unique();
             $table->enum('status', ['pending', 'paid', 'used', 'cancelled'])->default('pending');

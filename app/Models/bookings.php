@@ -13,6 +13,7 @@ class bookings extends Model
         'price',
         'status',
         'check_in_at',
+        'quantity',
         'snap_token',
     ];
 
