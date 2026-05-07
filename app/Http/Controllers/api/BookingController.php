@@ -85,18 +85,18 @@ class BookingController extends Controller
             $totalPrice = $package->price * $validated['quantity'];
 
             // 5. Simpan booking
+            $orderId = 'KRC-' . time() . '-' . Str::random(5);
             $booking = bookings::create([
-                'user_id' => auth()->id(), // Ambil ID user yang sedang login via Sanctum
+                'user_id' => auth()->id(),
                 'ticket_code' => $this->generateUniqueTicketCode(),
                 'ticket_package_id' => $validated['ticket_package_id'],
                 'price' => $totalPrice,
                 'status' => 'pending',
-                'quantity' => $request->quantity,
+                'quantity' => $validated['quantity'],
+                'order_id' => $orderId,
             ]);
 
             // 6. Generate Snap Token Midtrans
-            $orderId = 'KRC-' . $booking->id . '-' . time();
-
             $params = [
                 'transaction_details' => [
                     'order_id' => $orderId,
@@ -115,15 +115,10 @@ class BookingController extends Controller
                 'snap_token' => $snapToken
             ]);
 
-            // 7. Kurangi kuota tiket (Logic dasar)
-            if ($booking->status === 'paid') {
-                $package->decrement('quota', $validated['quantity']);
-            }
-
             DB::commit();
 
             return response()->json([
-                'title' => 'Success',
+                'status' => 'success',
                 'message' => 'Booking berhasil dibuat',
                 'order_id' => $orderId,
                 'snap_token' => $snapToken,

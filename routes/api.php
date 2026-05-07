@@ -17,10 +17,24 @@ Route::prefix('v1')->group(function () {
     //ping route
     Route::get('/', function () {
         return response()->json([
-            'title' => "pong",
+            'status' => "success",
             'data' => "pong",
             'message' => "success"
         ], 200);
+    });
+
+    // Dummy route for Midtrans SDK initialization
+    Route::get('/charge', function () {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Midtrans initialization dummy endpoint'
+        ]);
+    });
+    Route::post('/charge', function () {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Midtrans initialization dummy endpoint'
+        ]);
     });
 
     // auth route

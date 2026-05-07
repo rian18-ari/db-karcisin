@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class bookings extends Model
 {
     protected $fillable = [
+        'order_id',
         'ticket_code',
         'ticket_package_id',
         'user_id',

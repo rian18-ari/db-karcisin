@@ -113,24 +113,33 @@ Sistem check-in yang efisien untuk mempercepat antrean di lokasi acara.
 - **List Peserta**: `/owner/participants`
 
 ### API Endpoint (v1)
-- `POST /api/login` - Autentikasi User
-- `GET /api/events` - Daftar Event
-- `POST /api/bookings` - Pemesanan Tiket (Return `snap_token`)
-- `POST /api/bookings/webhook` - Webhook Midtrans untuk update status pembayaran
+- `POST /api/v1/login` - Autentikasi User
+- `GET /api/v1/events` - Daftar Event
+- `POST /api/v1/bookings` - Pemesanan Tiket (Return `snap_token`)
+- `POST /api/v1/bookings/webhook` - Webhook Midtrans untuk update status pembayaran
+- `GET/POST /api/v1/charge` - Dummy endpoint untuk inisialisasi SDK Midtrans
 
 ---
 
-## 💳 Cara Penggunaan Payment Gateway (Midtrans)
+## 💳 Cara Penggunaan Payment Gateway (Midtrans) *(payment flow)*
 
-1. **Membuat Booking (Client/Mobile)**:
-   - Kirimkan *request* `POST /api/bookings` dengan *body* berisi `ticket_package_id` dan `quantity`.
-   - API akan memvalidasi kuota dan mengembalikan data booking beserta `snap_token`.
-   - Gunakan `snap_token` tersebut pada SDK Midtrans di sisi aplikasi client (contoh: Flutter) untuk menampilkan antarmuka pembayaran.
-2. **Proses Webhook (Otomatis)**:
-   - Pastikan URL *callback* di dashboard Midtrans diatur mengarah ke URL webhook aplikasi ini:
-     `https://<domain-anda>/api/v1/bookings/webhook`
-   - Saat user menyelesaikan pembayaran (atau batal/kadaluarsa), Midtrans akan mengirim HTTP POST ke *endpoint* webhook tersebut.
-   - Sistem akan otomatis memverifikasi `signature_key` dan memperbarui `payment_status` pada tabel `bookings` menjadi `success`, `cancel`, atau `expire`.
+1.  **Inisialisasi SDK (Mobile)**: 
+    *   Midtrans SDK diinisialisasi di `main.dart` menggunakan `MidtransSDK.init` tanpa `await` agar tidak menghambat *splash screen*.
+    *   `merchantBaseUrl` diarahkan ke `Config.baseUrl` (`/api/v1`) untuk memicu *dummy check* ke `/api/v1/charge` [File: `lib/main.dart`].
+2.  **Membuat Booking (Mobile -> Laravel)**:
+    *   `BookingBloc` mengirim event `CreateBooking` yang memicu request ke `POST /api/v1/bookings` [File: `lib/bloc/booking/booking_bloc.dart`].
+    *   `BookingController@store` di Laravel melakukan:
+        *   Validasi paket & kuota.
+        *   Simpan booking ke database dengan status `pending` [File: `app/Http/Controllers/api/BookingController.php`].
+        *   Generate `snap_token` menggunakan library `midtrans/midtrans-php`.
+        *   Mengembalikan JSON: `{ "status": "success", "snap_token": "...", "data": { ... } }`.
+3.  **Memunculkan UI Pembayaran (Mobile)**:
+    *   Setelah menerima `snap_token`, `BookingBloc` memanggil `midtransGlobal!.startPaymentUiFlow(token: snapToken)`.
+    *   Pengecekan `midtransGlobal == null` dilakukan untuk mencegah `LateInitializationError` [File: `lib/bloc/booking/booking_bloc.dart`].
+4.  **Callback & Webhook**:
+    *   **Client Side**: SDK memicu `setTransactionFinishedCallback` saat pembayaran selesai di HP user untuk navigasi UI.
+    *   **Server Side**: Midtrans mengirimkan notifikasi ke `POST /api/v1/bookings/webhook`.
+    *   Laravel memverifikasi `signature_key`, lalu mengupdate status booking menjadi `paid` dan mengurangi kuota tiket secara permanen [File: `app/Http/Controllers/api/BookingController.php`].
 
 ---
 
