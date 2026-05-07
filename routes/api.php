@@ -14,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
 
+    //ping route
+    Route::get('/', function () {
+        return response()->json([
+            'title' => "pong",
+            'data' => "pong",
+            'message' => "success"
+        ], 200);
+    });
+
     // auth route
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
